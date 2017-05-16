@@ -7,9 +7,10 @@ public class CharacterDisplay : MonoBehaviour
 	private Touch oldTouch1;  //上次触摸点1(手指1)  
 	private Touch oldTouch2;  //上次触摸点2(手指2)  
 
+	public Camera mainCamera;
+
 	void Start()  
 	{  
-
 	}  
 
 
@@ -48,17 +49,15 @@ public class CharacterDisplay : MonoBehaviour
 		//两个距离之差，为正表示放大手势， 为负表示缩小手势  
 		float offset = newDistance - oldDistance;  
 
-		//放大因子， 一个像素按 0.01倍来算(100可调整)  
-		float scaleFactor = offset / 100f;  
-		Vector3 localScale = transform.localScale;  
-		Vector3 scale = new Vector3(localScale.x + scaleFactor,  
-			localScale.y + scaleFactor,   
-			localScale.z + scaleFactor);  
-
-		//最小缩放到 0.3 倍  
-		if (scale.x > 0.3f && scale.y > 0.3f && scale.z > 0.3f) {  
-			transform.localScale = scale;  
-		}  
+		Vector3 tmp = mainCamera.transform.transform.position;
+		tmp.z = tmp.z + offset * 0.02f;
+		if (tmp.z > -0.6f) {
+			tmp.z = -0.6f;
+		}
+		if (tmp.z < -4.3f) {
+			tmp.z = -4.3f;
+		}
+		mainCamera.transform.position = tmp;
 
 		//记住最新的触摸点，下次使用  
 		oldTouch1 = newTouch1;  
